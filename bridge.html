@@ -125,8 +125,17 @@ select {
 </head>
 <body>
   <header class="banner">
-    <p id="todayDate"><br>
-			<a href="https://time.is/Port_Charlotte" id="time_is_link" rel="nofollow" style="font-size:18px;">EDT:</a> <span id="Port_Charlotte_z161" style="font-size:16px;font-weight: bold"></span>
+         <br><b>Today is:
+		<script>
+		const weekday = ["Sunday ","Monday ","Tuesday ","Wednesday ","Thursday ","Friday ","Saturday "];
+        const d = new Date();
+        let day = weekday[d.getDay()];
+        document.write(day);
+		date = new Date().toLocaleDateString();
+        document.write(date);
+        </script></b>
+   </div>
+		<a href="https://time.is/Port_Charlotte" id="time_is_link" rel="nofollow" style="font-size:18px;">EDT:</a> <span id="Port_Charlotte_z161" style="font-size:16px;font-weight: bold"></span>
         <script src="https://widget.time.is/en.js"></script>
         <script>
           time_is_widget.init({
@@ -137,8 +146,6 @@ select {
             }
           });
         </script>
- 
-	</p>
     
   </header>
 
