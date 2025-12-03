@@ -87,21 +87,7 @@ select {
         /* **Reduced padding on small screens** */
         padding: 0.5rem 0.12rem; 
     }
-    
-    .banner a#time_is_link {
-        /* **Reduced size of "EDT:" text** */
-        font-size: 14px !important; 
-    }
-    
-    .banner span#Port_Charlotte_z161 {
-        /* **Reduced size of time text** */
-        font-size: 14px !important; 
-    }
-    
-    .banner b {
-        /* **Reduced size of 'Today is' text** */
-        font-size: 14px; 
-    }
+   
 }
 /* **END of primary styles** */
    </style>
@@ -151,40 +137,82 @@ select {
       color: #003366;
       font-family: Arial, Helvetica, sans-serif;
     }
-
-    </style>
-
+</style>
 </head>
 <body>
   <header class="banner">
-    <b>Today is:
-		<script>
-		const weekday = ["Sunday ","Monday ","Tuesday ","Wednesday ","Thursday ","Friday ","Saturday "];
-     	const d = new Date();
-     	let day = weekday[d.getDay()];
-     	document.write(day);
-		date = new Date().toLocaleDateString();
-     	document.write(date);
-     	</script></b>
-     <br><a href="https://time.is/Port_Charlotte" id="time_is_link" rel="nofollow" style="Color:White;font-size:18px;">EDT:</a> 
-	 <span id="Port_Charlotte_z161" style="font-size:16px;font-weight: bold"></span>
-
-      <script src="https://widget.time.is/en.js"></script>
-      <script>
-      	time_is_widget.init({
-      	  Port_Charlotte_z161: {
-      	    template: "SUN",
-      	    sun_format: "Sunrise: srhour:srminute AM <br>Sunset: ss12hour:ssminute PM",
-      	    coords: "26.9761700,-82.0906400"
-      	  }
-      	});
-      </script>
-	
+    <span id="date"></span>
+    <span id="sun"></span>
+    <span id="temp"></span>
+    <span id="loc"></span>
+  </div>
   </header>
+<script>
+    async function loadWeather(lat, lon, fallbackLabel) {
+      try {
+        // Weather API
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=sunrise,sunset&timezone=auto`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Reverse Geocoding API (BigDataCloud)
+        let locationName = fallbackLabel;
+        try {
+          const geoUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+          const geoResp = await fetch(geoUrl);
+          const geoData = await geoResp.json();
+          locationName = geoData.city || geoData.locality || geoData.principalSubdivision || fallbackLabel;
+        } catch (geoErr) {
+          console.warn("Reverse geocoding failed, using fallback label.");
+        }
+
+        // Date
+        const today = new Date();
+        document.getElementById("date").textContent =
+          today.toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+
+        // Sunrise / Sunset
+        const sunrise = new Date(data.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const sunset = new Date(data.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById("sun").textContent = `Sunrise: ${sunrise} Sunset: ${sunset}`;
+
+        // Temperature (convert °C ? °F)
+        const tempC = data.current_weather.temperature;
+        const tempF = (tempC * 9/5 + 32).toFixed(1);
+        document.getElementById("temp").textContent = `Temperature: ${tempF} °F`;
+
+        // Location label
+        document.getElementById("loc").textContent = `Location: ${locationName}`;
+      } catch (err) {
+        console.error("Weather fetch failed:", err);
+        document.getElementById("loc").textContent = "Weather data unavailable";
+      }
+    }
+
+    function initWeather() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            loadWeather(pos.coords.latitude, pos.coords.longitude, "Your Device Location");
+          },
+          err => {
+            // Fallback: Punta Gorda, FL
+            loadWeather(26.93, -82.05, "Punta Gorda, FL (Fallback)");
+          }
+        );
+      } else {
+        // Fallback: Punta Gorda, FL
+        loadWeather(26.93, -82.05, "Punta Gorda, FL (Fallback)");
+      }
+    }
+
+    initWeather();
+  </script>
 
   <main class="container">
     <section class="bridge-section">
 <img src="BridgeIcon.png" alt="Bridge Icon" class="top-image"><br>
+<div style="text-align: center;">This site works best on smartphones and tablets for bridge openings</div>
 
   <h2 class="bridge-title">Gulf & Okeechobee Bridge Openings</h2>
 
@@ -445,22 +473,6 @@ select {
     });
   });
 </script>
-  <script>
-    // Display today’s date (This script is redundant as the banner already shows the date, but kept it for completeness)
-    document.getElementById("todayDate") && document.getElementById("todayDate").textContent =
-      "Today is " + new Date().toLocaleDateString();
-  </script>
-  
-  <script>
-  // Run after the page loads
-  window.addEventListener('load', function() {
-    // Simple test: if it's NOT a mobile device
-    if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      alert("This site works best on smartphones and tablets for bridge openings");
-    }
-  });
-</script>
-  
 
 </body>
 </html>
