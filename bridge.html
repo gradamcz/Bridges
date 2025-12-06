@@ -58,6 +58,15 @@ select {
   background-color: rgb(198, 208, 222);
 }
  
+input {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0px;
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
 .icon {
   width: 100px;
   height: 100px;
@@ -192,8 +201,8 @@ select::-webkit-expand {
           today.toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric" });
 
         // Sunrise / Sunset
-        const sunrise = new Date(data.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const sunset = new Date(data.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const sunrise = new Date(data.daily.sunrise).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const sunset = new Date(data.daily.sunset).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         document.getElementById("sun").textContent = `Sunrise: ${sunrise} Sunset: ${sunset}`;
 
         // Temperature (convert °C ? °F)
@@ -460,7 +469,7 @@ select::-webkit-expand {
     <span>Fuel Prices</span>
   </button>
 
-  <button class="icon-button" onclick="window.open('https://www.google.com/maps/d/u/0/viewer?ll=27.011979503559882%2C-82.3808331269609&z=9&mid=1JBrtpoBUXpwK22f-i-2m5sUV0NxF_zw', '_blank')">
+  <button class="icon-button" onclick="https://www.google.com/maps/d/u/0/viewer?ll=27.011979503559882%2C-82.3808331269609&z=9&mid=1JBrtpoBUXpwK22f-i-2m5sUV0NxF_zw', '_blank')">
     <img src="ToiletIcon.png" alt="Gas Pump Icon">
     <span>Pumpouts</span>
   </button>
