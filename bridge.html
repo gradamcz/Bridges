@@ -22,12 +22,13 @@ body {
   color: white;
   text-align: center;
   padding: 0.8rem 0.12rem; /* Reduced vertical padding slightly */
+  height:40px;
 }
 
 .container {
   max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: .25rem auto;
+  padding: 0.25rem;
 }
 
 .bridge-section {
@@ -58,15 +59,6 @@ select {
   background-color: rgb(198, 208, 222);
 }
  
-input {
-  width: 100%;
-  padding: 8px;
-  margin: 10px 0px;
-  border: 1px solid rgb(204, 204, 204);
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
 .icon {
   width: 100px;
   height: 100px;
@@ -201,17 +193,17 @@ select::-webkit-expand {
           today.toLocaleDateString("en-US", { weekday: "short", year: "numeric", month: "short", day: "numeric" });
 
         // Sunrise / Sunset
-        const sunrise = new Date(data.daily.sunrise).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const sunset = new Date(data.daily.sunset).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const sunrise = new Date(data.daily.sunrise[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const sunset = new Date(data.daily.sunset[0]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         document.getElementById("sun").textContent = `Sunrise: ${sunrise} Sunset: ${sunset}`;
 
         // Temperature (convert °C ? °F)
         const tempC = data.current_weather.temperature;
         const tempF = (tempC * 9/5 + 32).toFixed(1);
-        document.getElementById("temp").textContent = `Temperature: ${tempF} °F`;
+        document.getElementById("temp").textContent = `Temp: ${tempF} °F`;
 
         // Location label
-        document.getElementById("loc").textContent = `Location: ${locationName}`;
+        document.getElementById("loc").textContent = `Locat: ${locationName}`;
       } catch (err) {
         console.error("Weather fetch failed:", err);
         document.getElementById("loc").textContent = "Weather data unavailable";
@@ -469,7 +461,7 @@ select::-webkit-expand {
     <span>Fuel Prices</span>
   </button>
 
-  <button class="icon-button" onclick="https://www.google.com/maps/d/u/0/viewer?ll=27.011979503559882%2C-82.3808331269609&z=9&mid=1JBrtpoBUXpwK22f-i-2m5sUV0NxF_zw', '_blank')">
+  <button class="icon-button" onclick="window.open('https://www.google.com/maps/d/u/0/viewer?ll=27.011979503559882%2C-82.3808331269609&z=9&mid=1JBrtpoBUXpwK22f-i-2m5sUV0NxF_zw', '_blank')">
     <img src="ToiletIcon.png" alt="Gas Pump Icon">
     <span>Pumpouts</span>
   </button>
